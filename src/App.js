@@ -31,7 +31,7 @@ function App() {
     setLoading(true);
     setPredictedPrice(null);
     try {
-      const res = await axios.post("http://127.0.0.1:8000/predict", formData);
+      const res = await axios.post("https://house-price-backend-aopp.onrender.com/predict", formData);
       setPredictedPrice(res.data.predicted_price);
     } catch (error) {
       alert("API Error: " + error.message);
@@ -40,104 +40,14 @@ function App() {
   };
 
   return (
-    <>
-      <style>{`
-        body {
-          margin: 0;
-          padding: 0;
-          font-family: 'Poppins', sans-serif;
-          background: linear-gradient(135deg, #e0f7fa, #fff3e0);
-          display: flex;
-          justify-content: center;
-          align-items: center;
-          min-height: 100vh;
-        }
-        .wrapper {
-          width: 100%;
-          max-width: 1280px;
-          background: #ffffff;
-          border-radius: 20px;
-          box-shadow: 0 15px 30px rgba(0,0,0,0.1);
-          padding: 60px 50px;
-          margin: 30px;
-        }
-        h1 {
-          text-align: center;
-          font-size: 3rem;
-          margin-bottom: 10px;
-          color: #0d47a1;
-        }
-        .subheading {
-          text-align: center;
-          color: #555;
-          font-size: 1.1rem;
-          margin-bottom: 40px;
-        }
-        .grid {
-          display: grid;
-          grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-          gap: 25px;
-        }
-        label {
-          font-weight: 600;
-          margin-bottom: 6px;
-          display: block;
-          color: #1565c0;
-        }
-        input, select {
-          width: 100%;
-          padding: 12px 14px;
-          border: 2px solid #bbdefb;
-          border-radius: 12px;
-          font-size: 1rem;
-          background: #f9fbfd;
-          color: #0d1b2a;
-          transition: 0.3s;
-        }
-        input:focus, select:focus {
-          border-color: #ffd600;
-          outline: none;
-          background: #fffde7;
-        }
-        button {
-          grid-column: 1 / -1;
-          background: linear-gradient(45deg, #42a5f5, #ffeb3b);
-          border: none;
-          padding: 16px;
-          border-radius: 14px;
-          font-size: 1.3rem;
-          font-weight: 600;
-          cursor: pointer;
-          transition: 0.4s;
-        }
-        button:hover {
-          background: linear-gradient(45deg, #1e88e5, #fdd835);
-        }
-        .result-box {
-          margin-top: 30px;
-          padding: 25px;
-          background: #fff8e1;
-          border-radius: 16px;
-          text-align: center;
-          font-size: 1.6rem;
-          font-weight: bold;
-          color: #0d47a1;
-        }
-        footer {
-          text-align: center;
-          margin-top: 40px;
-          font-size: 0.9rem;
-          color: #888;
-        }
-      `}</style>
-
-      <div className="wrapper">
-        <h1>🏠 Smart House Price Estimator</h1>
-        <p className="subheading">
-          Powered by AI & ML | Predict home prices with high accuracy using modern data-driven algorithms
+    <div className="min-h-screen bg-gradient-to-br from-white to-blue-50 text-blue-900 font-sans flex flex-col items-center justify-center p-6">
+      <div className="w-full max-w-5xl bg-white rounded-2xl shadow-xl p-10">
+        <h1 className="text-4xl font-bold text-center text-blue-900 mb-4">Your Home's Future, Calculated Today</h1>
+        <p className="text-center text-blue-700 mb-10 text-sm">
+          Predict house prices using Machine Learning
         </p>
 
-        <form onSubmit={handleSubmit} className="grid">
+        <form onSubmit={handleSubmit} className="grid grid-cols-1 md:grid-cols-2 gap-6">
           {Object.entries({
             bedrooms: "Bedrooms",
             bathrooms: "Bathrooms",
@@ -152,14 +62,15 @@ function App() {
             yr_built: "Year Built",
             yr_renovated: "Year Renovated"
           }).map(([key, label]) => (
-            <div key={key}>
-              <label htmlFor={key}>{label}</label>
+            <div key={key} className="flex flex-col">
+              <label htmlFor={key} className="mb-1 font-medium text-blue-800">{label}</label>
               {key === "floors" || key === "waterfront" || key === "view" || key === "condition" || key === "grade" ? (
                 <select
                   name={key}
                   id={key}
                   value={formData[key]}
                   onChange={handleChange}
+                  className="p-2 border border-blue-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                   required
                 >
                   {key === "waterfront" ? (
@@ -168,15 +79,7 @@ function App() {
                     [0, 1, 2, 3].map((v) => <option key={v} value={v}>{["None", "Average", "Good", "Excellent"][v]}</option>)
                   ) : key === "condition" ? (
                     [1, 2, 3, 4, 5].map((v) => (
-                      <option key={v} value={v}>
-                        {[
-                          "Poor",
-                          "Fair",
-                          "Average",
-                          "Good",
-                          "Excellent"
-                        ][v - 1]}
-                      </option>
+                      <option key={v} value={v}>{["Poor", "Fair", "Average", "Good", "Excellent"][v - 1]}</option>
                     ))
                   ) : (
                     [...Array(key === "grade" ? 13 : 6).keys()].slice(1).map((v) => (
@@ -191,28 +94,35 @@ function App() {
                   id={key}
                   value={formData[key]}
                   onChange={handleChange}
+                  className="p-2 border border-blue-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                   required
                 />
               )}
             </div>
           ))}
 
-          <button type="submit" disabled={loading}>
-            {loading ? "Predicting..." : "🚀 Predict Price"}
+          <button
+            type="submit"
+            disabled={loading}
+            className="md:col-span-2 mt-4 bg-blue-900 text-white py-3 rounded-xl hover:bg-blue-800 transition"
+          >
+            {loading ? "Predicting..." : "Predict Price"}
           </button>
         </form>
 
         {predictedPrice !== null && (
-          <div className="result-box">
-            🎯 Estimated Price: ₹ {predictedPrice.toLocaleString()}
+          <div className="mt-8 p-5 bg-blue-50 border border-blue-200 rounded-xl text-center">
+            <h2 className="text-xl font-semibold text-blue-900">
+              Estimated Price: ₹ {predictedPrice.toLocaleString()}
+            </h2>
           </div>
         )}
 
-        <footer>
+        <footer className="text-center mt-10 text-sm text-blue-500">
           Made with ❤️ by <strong>Kajal Singh</strong> | AI-Powered Housing Intelligence
         </footer>
       </div>
-    </>
+    </div>
   );
 }
 

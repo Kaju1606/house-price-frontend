@@ -39,53 +39,94 @@ function App() {
     setLoading(false);
   };
 
+  const fieldLabels = {
+    bedrooms: "Bedrooms",
+    bathrooms: "Bathrooms",
+    sqft_living: "Living Area (sqft)",
+    floors: "Floors",
+    waterfront: "Waterfront",
+    view: "View Quality",
+    condition: "Condition",
+    grade: "Grade",
+    sqft_above: "Above Ground Area (sqft)",
+    sqft_basement: "Basement Area (sqft)",
+    yr_built: "Year Built",
+    yr_renovated: "Year Renovated"
+  };
+
   return (
-    <div className="min-h-screen bg-gradient-to-br from-white to-blue-50 text-blue-900 font-sans flex flex-col items-center justify-center p-6">
-      <div className="w-full max-w-5xl bg-white rounded-2xl shadow-xl p-10">
-        <h1 className="text-4xl font-bold text-center text-blue-900 mb-4">Your Home's Future, Calculated Today</h1>
-        <p className="text-center text-blue-700 mb-10 text-sm">
-          Predict house prices using Machine Learning
+    <div className="min-h-screen bg-gradient-to-br from-white to-blue-100 flex items-center justify-center px-4 py-10">
+      <div className="w-full max-w-4xl bg-white rounded-3xl shadow-2xl p-10 border border-blue-200">
+        <h1 className="text-3xl md:text-4xl font-bold text-center text-blue-900 mb-3">Your Home's Future, Calculated Today</h1>
+        <p className="text-center text-blue-600 mb-10 text-sm md:text-base">
+          Predict your house price using AI-powered intelligence.
         </p>
 
         <form onSubmit={handleSubmit} className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          {Object.entries({
-            bedrooms: "Bedrooms",
-            bathrooms: "Bathrooms",
-            sqft_living: "Living Area (sqft)",
-            floors: "Floors",
-            waterfront: "Waterfront",
-            view: "View Quality",
-            condition: "Condition",
-            grade: "Grade",
-            sqft_above: "Above Ground Area (sqft)",
-            sqft_basement: "Basement Area (sqft)",
-            yr_built: "Year Built",
-            yr_renovated: "Year Renovated"
-          }).map(([key, label]) => (
+          {Object.entries(fieldLabels).map(([key, label]) => (
             <div key={key} className="flex flex-col">
-              <label htmlFor={key} className="mb-1 font-medium text-blue-800">{label}</label>
-              {key === "floors" || key === "waterfront" || key === "view" || key === "condition" || key === "grade" ? (
+              <label htmlFor={key} className="mb-2 font-medium text-blue-800">{label}</label>
+              {key === "sqft_living" ? (
+                <input
+                  type="number"
+                  name={key}
+                  id={key}
+                  value={formData[key]}
+                  onChange={handleChange}
+                  className="p-2 border border-blue-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  required
+                />
+              ) : key === "waterfront" ? (
                 <select
                   name={key}
                   id={key}
                   value={formData[key]}
                   onChange={handleChange}
-                  className="p-2 border border-blue-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  className="p-2 border border-blue-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                   required
                 >
-                  {key === "waterfront" ? (
-                    [0, 1].map((v) => <option key={v} value={v}>{v === 0 ? "No" : "Yes"}</option>)
-                  ) : key === "view" ? (
-                    [0, 1, 2, 3].map((v) => <option key={v} value={v}>{["None", "Average", "Good", "Excellent"][v]}</option>)
-                  ) : key === "condition" ? (
-                    [1, 2, 3, 4, 5].map((v) => (
-                      <option key={v} value={v}>{["Poor", "Fair", "Average", "Good", "Excellent"][v - 1]}</option>
-                    ))
-                  ) : (
-                    [...Array(key === "grade" ? 13 : 6).keys()].slice(1).map((v) => (
-                      <option key={v} value={v}>{v}</option>
-                    ))
-                  )}
+                  {[0, 1].map((v) => (
+                    <option key={v} value={v}>{v === 0 ? "No" : "Yes"}</option>
+                  ))}
+                </select>
+              ) : key === "view" ? (
+                <select
+                  name={key}
+                  id={key}
+                  value={formData[key]}
+                  onChange={handleChange}
+                  className="p-2 border border-blue-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  required
+                >
+                  {[0, 1, 2, 3].map((v) => (
+                    <option key={v} value={v}>{["None", "Average", "Good", "Excellent"][v]}</option>
+                  ))}
+                </select>
+              ) : key === "condition" ? (
+                <select
+                  name={key}
+                  id={key}
+                  value={formData[key]}
+                  onChange={handleChange}
+                  className="p-2 border border-blue-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  required
+                >
+                  {[1, 2, 3, 4, 5].map((v) => (
+                    <option key={v} value={v}>{["Poor", "Fair", "Average", "Good", "Excellent"][v - 1]}</option>
+                  ))}
+                </select>
+              ) : key === "grade" ? (
+                <select
+                  name={key}
+                  id={key}
+                  value={formData[key]}
+                  onChange={handleChange}
+                  className="p-2 border border-blue-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  required
+                >
+                  {[...Array(13).keys()].slice(1).map((v) => (
+                    <option key={v} value={v}>{v}</option>
+                  ))}
                 </select>
               ) : (
                 <input
@@ -94,7 +135,7 @@ function App() {
                   id={key}
                   value={formData[key]}
                   onChange={handleChange}
-                  className="p-2 border border-blue-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  className="p-2 border border-blue-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                   required
                 />
               )}
@@ -104,14 +145,14 @@ function App() {
           <button
             type="submit"
             disabled={loading}
-            className="md:col-span-2 mt-4 bg-blue-900 text-white py-3 rounded-xl hover:bg-blue-800 transition"
+            className="md:col-span-2 mt-6 bg-blue-900 text-white py-3 rounded-xl hover:bg-blue-800 transition"
           >
             {loading ? "Predicting..." : "Predict Price"}
           </button>
         </form>
 
         {predictedPrice !== null && (
-          <div className="mt-8 p-5 bg-blue-50 border border-blue-200 rounded-xl text-center">
+          <div className="mt-8 p-6 bg-blue-50 border border-blue-200 rounded-xl text-center">
             <h2 className="text-xl font-semibold text-blue-900">
               Estimated Price: ₹ {predictedPrice.toLocaleString()}
             </h2>
